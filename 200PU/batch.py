@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# coding: utf-8
+
 
 import numpy as np
 import pandas as pd
@@ -6,6 +8,7 @@ from matplotlib import pyplot as plt
 import os
 import uproot
 from datetime import date
+from datetime import datetime
 import subprocess
 
 
@@ -46,14 +49,15 @@ def prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions,thr, na
     elec_dir=workdir+'/'+version+'/electrons'
     pions_dir=workdir+'/'+version+'/pions'
     
+    
     os.chdir(elec_dir)
     for i in batches_elec:
         os.makedirs('elec_{}'.format(i))
         with open(name+'_{}.sub'.format(i), 'w') as script:
             print ('#! /bin/bash',file=script)
             print ('uname -a',file=script)
-            print >>script, 'cd', workdir
-            print >>script, 'source init_env_polui.sh'
+            #print >>script, 'cd', workdir
+            #print >>script, 'source init_env_polui.sh'
             print ('cd', workdir+'/'+version,file=script)
             print (workdir+'/preprocessing.py -p {0} -b {1} -t {2} -s {3}'.format(path_electrons, batches_elec[i], thr, elec_dir+'/elec_{}'.format(i)),file=script)
             #print >>script, 'touch', name+'_{}.done'.format(i)
@@ -71,19 +75,23 @@ def prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions,thr, na
             print ( workdir+'/preprocessing.py -p {0} -b {1} -t {2} -s {3}'.format(path_pions, batches_pions, thr, pions_dir+'/pion_{}'.format(i)),file=script)
             #print >>script, 'touch', name+'_{}.done'.format(i)
    
-    return elec_dir, pions_dir
+    return elec_dir, pions_dir, version
     
 
-def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions, name='batch', queue='long', proxy='~/.t3/proxy.cert'):
+def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name='batch', queue='long', proxy='~/.t3/proxy.cert'):
     print ('Sending {0}+{1} jobs on {2}'.format(len(batches_elec), len(batches_pions), queue+'@llrcms01'))
     print ('===============')
-    for i,event in enumerate(events):
-        qsub_args = []
-        #qsub_args.append('-{}'.format(queue))
-        qsub_args.append(elec_dir+'/'+name+'_{}.sub'.format(i))
-        #qsub_command = ['/opt/exp_soft/cms/t3/t3submit'] + qsub_args
-        print (' '.join(qsub_args))
-        subprocess.run(qsub_args)
+    with open(workdir+'/'+version+'/log.txt','w') as log:
+        for i,batch in enumerate(batches_elec):
+            qsub_args = []
+            #qsub_args.append('-{}'.format(queue))
+            qsub_args.append(elec_dir+'/'+name+'_{}.sub'.format(i))
+            #qsub_command = ['/opt/exp_soft/cms/t3/t3submit'] + qsub_args
+            print (str(datetime.now()),' '.join(qsub_args))
+            status=subprocess.run(qsub_args)
+            if status.returncode==0:
+                print(str(datetime.now())+':batch_{} done\n'.format(i),file=log)
+        
     print ('===============')
     
     
@@ -98,11 +106,18 @@ def main(parameters):
     batches_elec=batch_files(path_electrons, file_per_batch)
     batches_pions=batch_files(path_pions, file_per_batch)
       
-    elec_dir, pions_dir=prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions, thr)
-    #launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions)
+    elec_dir, pions_dir, version=prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions, thr)
+    os.chdir(workdir)
+    launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions, version)
    
     
 if __name__=='__main__':
     parameters='parameters'
     main(parameters)
     
+
+
+
+
+
+
