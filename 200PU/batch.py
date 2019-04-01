@@ -11,7 +11,6 @@ from datetime import date
 from datetime import datetime
 import subprocess
 
-
 workdir=os.getcwd()
 
 def job_version(workdir):
