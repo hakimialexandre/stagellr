@@ -150,9 +150,7 @@ if __name__=='__main__':
    
     (opt, args) = parser.parse_args()
     os.chdir(opt.param_file)
-
-    import importlib
-    param = importlib.import_module(param_file, package=None)
+    import param
     path=param.path
     files=param.files
     thr=param.thr
