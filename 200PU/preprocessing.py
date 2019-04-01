@@ -150,7 +150,8 @@ if __name__=='__main__':
    
     (opt, args) = parser.parse_args()
     os.chdir(opt.param_file)
-    print(opt.param_file, os.listdir())
+    with open('log.txt', 'w') as log:
+        print(opt.param_file, os.listdir(), file=log)
     import param
     path=param.path
     files=param.files
