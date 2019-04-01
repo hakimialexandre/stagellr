@@ -54,10 +54,10 @@ def prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions,thr, na
     for i in batches_elec:
         os.makedirs('elec_{}'.format(i))
         with open('elec_{}/param.py'.format(i), 'w') as param:
-            print('path={}\n'.format(path_electrons), file=param)
-            print('files={}\n'.format(batches_elec), file=param)
+            print('path="{}"\n'.format(path_electrons), file=param)
+            print('files={}\n'.format(batches_elec[i]), file=param)
             print('thr={}\n'.format(thr), file=param)
-            print('savedir='+elec_dir+'/elec_{}'.format(i), file=param)
+            print('savedir="'+elec_dir+'/elec_{}"'.format(i), file=param)
             st=os.stat('elec_{}/param.py'.format(i))
             os.chmod('elec_{}/param.py'.format(i), st.st_mode | 0o744)
 
@@ -80,10 +80,10 @@ def prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions,thr, na
     for i in batches_pions:
         os.makedirs('pions_{}'.format(i))
         with open('pions_{}/param.py'.format(i), 'w') as param:
-            print('path={}\n'.format(path_pions), file=param)
-            print('files={}\n'.format(batches_pions), file=param)
+            print('path="{}"\n'.format(path_pions), file=param)
+            print('files={}\n'.format(batches_pions[i]), file=param)
             print('thr={}\n'.format(thr), file=param)
-            print('savedir='+pions_dir+'/pion_{}'.format(i), file=param)
+            print('savedir="'+pions_dir+'/pion_{}"'.format(i), file=param)
             st=os.stat('pions_{}/param.py'.format(i))
             os.chmod('pions_{}/param.py'.format(i), st.st_mode | 0o744)
         with open(name+'_{}.sub'.format(i), 'w') as script:

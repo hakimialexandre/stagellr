@@ -146,10 +146,11 @@ def preprocessing(path, files, savedir,  thr):
         
 if __name__=='__main__':
     parser = optparse.OptionParser()
-    parser.add_option("-f","--file", dest="param_file", help="select the path to the parameters file")
+    parser.add_option("-f","--file",type="string", dest="param_file", help="select the path to the parameters file")
    
     (opt, args) = parser.parse_args()
     os.chdir(opt.param_file)
+
     import param
     path=param.path
     files=param.files
