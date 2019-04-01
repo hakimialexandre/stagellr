@@ -146,17 +146,15 @@ def preprocessing(path, files, savedir,  thr):
         
 if __name__=='__main__':
     parser = optparse.OptionParser()
-    parser.add_option("-t", "--threshold", dest="thr",
-                  help="set the threshold for deltar", default="0.05")
-    parser.add_option("-p","--path", dest="path", help="select the path to data")
-    parser.add_option("-b", "--batch", dest="files", help="select the files to process")
-    parser.add_option("-s", "--save", dest="savedir", help="where to save the processed files")
+    parser.add_option("-f","--file", dest="param", help="select the path to the parameters file")
+   
     (opt, args) = parser.parse_args()
     
-    path=opt.path
-    thr=opt.thr
-    files=opt.files
-    savedir=opt.savedir
+    import param 
+    path=param.path
+    files=param.files
+    thr=param.thr
+    savedir=param.savedir
     
     preprocessing(path, files, savedir, thr)
 

@@ -53,27 +53,44 @@ def prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions,thr, na
     os.chdir(elec_dir)
     for i in batches_elec:
         os.makedirs('elec_{}'.format(i))
+        with open('param_{}.py'.format(i), 'w') as param:
+            print('path={}\n'.format(path_electrons), file=param)
+            print('files={}\n'.format(batches_elec), file=param)
+            print('thr={}\n'.format(thr), file=param)
+            print('savedir='+elec_dir+'/elec_{}'.format(i), file=param)
+            st=os.stat(param)
+            os.chmod(param, st.st_mode | 0o744)
         with open(name+'_{}.sub'.format(i), 'w') as script:
             print ('#! /bin/bash',file=script)
             print ('uname -a',file=script)
             #print >>script, 'cd', workdir
             #print >>script, 'source init_env_polui.sh'
             print ('cd', workdir+'/'+version,file=script)
-            print (workdir+'/preprocessing.py -p {0} -b {1} -t {2} -s {3}'.format(path_electrons, batches_elec[i], thr, elec_dir+'/elec_{}'.format(i)),file=script)
+            print ( workdir+'/preprocessing.py -f param_{}.py'.format(i),file=script)
             #print >>script, 'touch', name+'_{}.done'.format(i)
+       
+            
             
             
     os.chdir(pions_dir)
     for i in batches_pions:
         os.makedirs('pions_{}'.format(i))
+        with open('param_{}.py'.format(i), 'w') as param:
+            print('path={}\n'.format(path_pions), file=param)
+            print('files={}\n'.format(batches_pions), file=param)
+            print('thr={}\n'.format(thr), file=param)
+            print('savedir='+pions_dir+'/pion_{}'.format(i), file=param)
+            st=os.stat(param)
+            os.chmod(param, st.st_mode | 0o744)
         with open(name+'_{}.sub'.format(i), 'w') as script:
             print ('#! /bin/bash', file=script)
             print ('uname -a',file=script)
             #print >>script, 'cd', workdir
             #print >>script, 'source init_env_polui.sh'
             print ('cd', workdir+'/'+version,file=script)
-            print ( workdir+'/preprocessing.py -p {0} -b {1} -t {2} -s {3}'.format(path_pions, batches_pions, thr, pions_dir+'/pion_{}'.format(i)),file=script)
+            print ( workdir+'/preprocessing.py -f param_{}.py'.format(i),file=script)
             #print >>script, 'touch', name+'_{}.done'.format(i)
+        
    
     return elec_dir, pions_dir, version
     
@@ -85,6 +102,7 @@ def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name=
         for i,batch in enumerate(batches_elec):
             qsub_args = []
             #qsub_args.append('-{}'.format(queue))
+
             qsub_args.append(elec_dir+'/'+name+'_{}.sub'.format(i))
             #qsub_command = ['/opt/exp_soft/cms/t3/t3submit'] + qsub_args
             print (str(datetime.now()),' '.join(qsub_args))
