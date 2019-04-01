@@ -61,6 +61,7 @@ def prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions,thr, na
             st=os.stat('param_{}.py'.format(i))
             os.chmod('param_{}.py'.format(i), st.st_mode | 0o744)
         with open(name+'_{}.sub'.format(i), 'w') as script:
+            
             print ('#! /bin/bash',file=script)
             print ('uname -a',file=script)
             #print >>script, 'cd', workdir
@@ -68,7 +69,9 @@ def prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions,thr, na
             print ('cd', workdir+'/'+version,file=script)
             print ( workdir+'/preprocessing.py -f param_{}.py'.format(i),file=script)
             #print >>script, 'touch', name+'_{}.done'.format(i)
-       
+            file=name+'_{}.sub'.format(i)
+            st=os.stat(file)
+            os.chmod(file, st.st_mode | 0o744)
             
             
             
@@ -90,6 +93,9 @@ def prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions,thr, na
             print ('cd', workdir+'/'+version,file=script)
             print ( workdir+'/preprocessing.py -f param_{}.py'.format(i),file=script)
             #print >>script, 'touch', name+'_{}.done'.format(i)
+            file=name+'_{}.sub'.format(i)
+            st=os.stat(file)
+            os.chmod(file, st.st_mode | 0o744)
         
    
     return elec_dir, pions_dir, version
