@@ -11,7 +11,7 @@ from datetime import date
 import optparse
 
 
-
+workdir=os.getcwd()
 algo_name=['T23', 'S', 'S0', 'S10', 'S20', 'T', 'T0', 'T10', 'T20']
 
 
@@ -149,7 +149,8 @@ if __name__=='__main__':
     parser.add_option("-f","--file", dest="param_file", help="select the path to the parameters file")
    
     (opt, args) = parser.parse_args()
-    
+    os.chdir(opt.param_file)
+
     import importlib
     param = importlib.import_module(param_file, package=None)
     path=param.path

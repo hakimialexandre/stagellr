@@ -53,13 +53,14 @@ def prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions,thr, na
     os.chdir(elec_dir)
     for i in batches_elec:
         os.makedirs('elec_{}'.format(i))
-        with open('param_{}.py'.format(i), 'w') as param:
+        with open('elec_{}/param.py'.format(i), 'w') as param:
             print('path={}\n'.format(path_electrons), file=param)
             print('files={}\n'.format(batches_elec), file=param)
             print('thr={}\n'.format(thr), file=param)
             print('savedir='+elec_dir+'/elec_{}'.format(i), file=param)
-            st=os.stat('param_{}.py'.format(i))
-            os.chmod('param_{}.py'.format(i), st.st_mode | 0o744)
+            st=os.stat('elec_{}/param.py'.format(i))
+            os.chmod('elec_{}/param.py'.format(i), st.st_mode | 0o744)
+
         with open(name+'_{}.sub'.format(i), 'w') as script:
             
             print ('#! /bin/bash',file=script)
@@ -67,7 +68,7 @@ def prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions,thr, na
             #print >>script, 'cd', workdir
             #print >>script, 'source init_env_polui.sh'
             print ('cd', workdir+'/'+version,file=script)
-            print ( workdir+'/preprocessing.py -f param_{}.py'.format(i),file=script)
+            print ( workdir+'/preprocessing.py -f'+elec_dir+'/elec_{}'.format(i),file=script)
             #print >>script, 'touch', name+'_{}.done'.format(i)
             file=name+'_{}.sub'.format(i)
             st=os.stat(file)
@@ -78,20 +79,20 @@ def prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions,thr, na
     os.chdir(pions_dir)
     for i in batches_pions:
         os.makedirs('pions_{}'.format(i))
-        with open('param_{}.py'.format(i), 'w') as param:
+        with open('pions_{}/param.py'.format(i), 'w') as param:
             print('path={}\n'.format(path_pions), file=param)
             print('files={}\n'.format(batches_pions), file=param)
             print('thr={}\n'.format(thr), file=param)
             print('savedir='+pions_dir+'/pion_{}'.format(i), file=param)
-            st=os.stat('param_{}.py'.format(i))
-            os.chmod('param_{}.py'.format(i), st.st_mode | 0o744)
+            st=os.stat('pions_{}/param.py'.format(i))
+            os.chmod('pions_{}/param.py'.format(i), st.st_mode | 0o744)
         with open(name+'_{}.sub'.format(i), 'w') as script:
             print ('#! /bin/bash', file=script)
             print ('uname -a',file=script)
             #print >>script, 'cd', workdir
             #print >>script, 'source init_env_polui.sh'
             print ('cd', workdir+'/'+version,file=script)
-            print ( workdir+'/preprocessing.py -f param_{}.py'.format(i),file=script)
+            print ( workdir+'/preprocessing.py -f'+pions_dir+'/pions_{}'.format(i),file=script)
             #print >>script, 'touch', name+'_{}.done'.format(i)
             file=name+'_{}.sub'.format(i)
             st=os.stat(file)
