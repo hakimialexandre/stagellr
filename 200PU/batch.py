@@ -68,7 +68,7 @@ def prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions,thr, na
             #print >>script, 'cd', workdir
             #print >>script, 'source init_env_polui.sh'
             print ('cd', workdir+'/'+version,file=script)
-            print ( workdir+'/preprocessing.py -f'+elec_dir+'/elec_{}'.format(i),file=script)
+            print ( workdir+'/preprocessing.py -f '+elec_dir+'/elec_{}'.format(i),file=script)
             #print >>script, 'touch', name+'_{}.done'.format(i)
             file=name+'_{}.sub'.format(i)
             st=os.stat(file)
@@ -92,7 +92,7 @@ def prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions,thr, na
             #print >>script, 'cd', workdir
             #print >>script, 'source init_env_polui.sh'
             print ('cd', workdir+'/'+version,file=script)
-            print ( workdir+'/preprocessing.py -f'+pions_dir+'/pions_{}'.format(i),file=script)
+            print ( workdir+'/preprocessing.py -f '+pions_dir+'/pions_{}'.format(i),file=script)
             #print >>script, 'touch', name+'_{}.done'.format(i)
             file=name+'_{}.sub'.format(i)
             st=os.stat(file)
