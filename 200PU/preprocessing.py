@@ -150,7 +150,7 @@ if __name__=='__main__':
    
     (opt, args) = parser.parse_args()
     os.chdir(opt.param_file)
-
+    print(opt.param_file, os.listdir())
     import param
     path=param.path
     files=param.files
