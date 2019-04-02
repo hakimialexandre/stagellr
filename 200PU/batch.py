@@ -10,6 +10,7 @@ import uproot
 from datetime import date
 from datetime import datetime
 import subprocess
+import time
 
 workdir=os.getcwd()
 
@@ -114,10 +115,12 @@ def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name=
             #qsub_command = ['/opt/exp_soft/cms/t3/t3submit'] + qsub_args
             print (str(datetime.now()),' '.join(qsub_args))
             print(str(datetime.now()),':elec_batch_{} start\n'.format(i),file=log)
+            start=time.time()
             status=subprocess.run(qsub_args, capture_output=False)
             print(str(datetime.now()), status.returncode, file=log)
             if status.returncode==0:
-                print(':elec_batch_{} done\n'.format(i),file=log)
+                duration=time.time()-start
+                print(':elec_batch_{} done in {}\n'.format(i, duration),file=log)
             print ('===============')
 
     for i,batch in enumerate(batches_pions):
@@ -129,10 +132,12 @@ def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name=
             #qsub_command = ['/opt/exp_soft/cms/t3/t3submit'] + qsub_args
             print (str(datetime.now()),' '.join(qsub_args))
             print(str(datetime.now()),':pion_batch_{} start\n'.format(i),file=log)
+            start=time.time()
             status=subprocess.run(qsub_args, capture_output=False)
             print(str(datetime.now()), status.returncode, file =log)
             if status.returncode==0:
-                print(':pion_batch_{} done\n'.format(i),file=log)
+                duration=time.time()-start
+                print(':pion_batch_{} done in {}\n'.format(i, duration),file=log)
             print ('===============')
     
         
