@@ -111,12 +111,12 @@ def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name=
 
             qsub_args.append(elec_dir+'/'+name+'_{}.sub'.format(i))
             #qsub_command = ['/opt/exp_soft/cms/t3/t3submit'] + qsub_args
-            #print (str(datetime.now()),' '.join(qsub_args))
-            print(str(datetime.now()),':batch_{} start\n'.format(i),file=log)
-            status=subprocess.run(qsub_args)
-            print(str(datetime.now()), status.returncode)
+            print (str(datetime.now()),' '.join(qsub_args))
+            print(str(datetime.now()),':elec_batch_{} start\n'.format(i),file=log)
+            status=subprocess.run(qsub_args, capture_output=False)
+            print(str(datetime.now()), status.returncode, file=log)
             if status.returncode==0:
-                print(':batch_{} done\n'.format(i),file=log)
+                print(':elec_batch_{} done\n'.format(i),file=log)
 
             for i,batch in enumerate(batches_pions):
             qsub_args = []
@@ -124,12 +124,12 @@ def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name=
 
             qsub_args.append(pions_dir+'/'+name+'_{}.sub'.format(i))
             #qsub_command = ['/opt/exp_soft/cms/t3/t3submit'] + qsub_args
-            #print (str(datetime.now()),' '.join(qsub_args))
-            print(str(datetime.now()),':batch_{} start\n'.format(i),file=log)
-            status=subprocess.run(qsub_args)
-            print(str(datetime.now()), status.returncode)
+            print (str(datetime.now()),' '.join(qsub_args))
+            print(str(datetime.now()),':pion_batch_{} start\n'.format(i),file=log)
+            status=subprocess.run(qsub_args, capture_output=False)
+            print(str(datetime.now()), status.returncode, file =log)
             if status.returncode==0:
-                print(':batch_{} done\n'.format(i),file=log)
+                print(':pion_batch_{} done\n'.format(i),file=log)
         
         
     print ('===============')
