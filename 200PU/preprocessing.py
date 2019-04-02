@@ -154,7 +154,7 @@ if __name__=='__main__':
     import importlib
     import sys
     sys.path.append(param_path)
-    param=importlib.import_module(param)
+    param=importlib.import_module('param')
     path=param.path
     files=param.files
     thr=param.thr
