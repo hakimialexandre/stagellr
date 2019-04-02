@@ -10,6 +10,7 @@ import uproot
 from datetime import date
 from datetime import datetime
 import subprocess
+import time
 
 workdir=os.getcwd()
 
@@ -82,7 +83,7 @@ def prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions,thr, na
             print('path="{}"\n'.format(path_pions), file=param)
             print('files={}\n'.format(batches_pions[i]), file=param)
             print('thr={}\n'.format(thr), file=param)
-            print('savedir="'+pions_dir+'/pion_{}"'.format(i), file=param)
+            print('savedir="'+pions_dir+'/pions_{}"'.format(i), file=param)
             st=os.stat('pions_{}/param.py'.format(i))
             os.chmod('pions_{}/param.py'.format(i), st.st_mode | 0o744)
         with open(name+'_{}.sub'.format(i), 'w') as script:
@@ -114,10 +115,12 @@ def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name=
             #qsub_command = ['/opt/exp_soft/cms/t3/t3submit'] + qsub_args
             print (str(datetime.now()),' '.join(qsub_args))
             print(str(datetime.now()),':elec_batch_{} start\n'.format(i),file=log)
+            start=time.time()
             status=subprocess.run(qsub_args, capture_output=False)
             print(str(datetime.now()), status.returncode, file=log)
             if status.returncode==0:
-                print(':elec_batch_{} done\n'.format(i),file=log)
+                duration=time.time()-start
+                print(':elec_batch_{} done in {}\n'.format(i, duration),file=log)
             print ('===============')
 
     for i,batch in enumerate(batches_pions):
@@ -129,10 +132,12 @@ def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name=
             #qsub_command = ['/opt/exp_soft/cms/t3/t3submit'] + qsub_args
             print (str(datetime.now()),' '.join(qsub_args))
             print(str(datetime.now()),':pion_batch_{} start\n'.format(i),file=log)
+            start=time.time()
             status=subprocess.run(qsub_args, capture_output=False)
             print(str(datetime.now()), status.returncode, file =log)
             if status.returncode==0:
-                print(':pion_batch_{} done\n'.format(i),file=log)
+                duration=time.time()-start
+                print(':pion_batch_{} done in {}\n'.format(i, duration),file=log)
             print ('===============')
     
         
