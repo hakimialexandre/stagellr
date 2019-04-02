@@ -117,6 +117,20 @@ def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name=
             print(str(datetime.now()), status.returncode)
             if status.returncode==0:
                 print(':batch_{} done\n'.format(i),file=log)
+
+            for i,batch in enumerate(batches_pions):
+            qsub_args = []
+            #qsub_args.append('-{}'.format(queue))
+
+            qsub_args.append(pions_dir+'/'+name+'_{}.sub'.format(i))
+            #qsub_command = ['/opt/exp_soft/cms/t3/t3submit'] + qsub_args
+            #print (str(datetime.now()),' '.join(qsub_args))
+            print(str(datetime.now()),':batch_{} start\n'.format(i),file=log)
+            status=subprocess.run(qsub_args)
+            print(str(datetime.now()), status.returncode)
+            if status.returncode==0:
+                print(':batch_{} done\n'.format(i),file=log)
+        
         
     print ('===============')
     
