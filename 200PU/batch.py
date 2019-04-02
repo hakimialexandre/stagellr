@@ -111,10 +111,12 @@ def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name=
 
             qsub_args.append(elec_dir+'/'+name+'_{}.sub'.format(i))
             #qsub_command = ['/opt/exp_soft/cms/t3/t3submit'] + qsub_args
-            print (str(datetime.now()),' '.join(qsub_args))
+            #print (str(datetime.now()),' '.join(qsub_args))
+            print(str(datetime.now()),':batch_{} start\n'.format(i),file=log)
             status=subprocess.run(qsub_args)
+            print(str(datetime.now()), status.returncode)
             if status.returncode==0:
-                print(str(datetime.now())+':batch_{} done\n'.format(i),file=log)
+                print(':batch_{} done\n'.format(i),file=log)
         
     print ('===============')
     
