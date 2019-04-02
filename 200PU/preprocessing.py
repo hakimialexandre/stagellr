@@ -146,13 +146,15 @@ def preprocessing(path, files, savedir,  thr):
         
 if __name__=='__main__':
     parser = optparse.OptionParser()
-    parser.add_option("-f","--file",type="string", dest="param_file", help="select the path to the parameters file")
+    parser.add_option("-f","--file",type="string", dest="param_path", help="select the path to the parameters file")
    
     (opt, args) = parser.parse_args()
-    os.chdir(opt.param_file)
-    with open('log.txt', 'w') as log:
-        print(opt.param_file, os.listdir(), file=log)
-    import param
+
+    param_path=opt.param_path
+    import importlib
+    import sys
+    sys.path.append(param_path)
+    param=importlib.import_module(param)
     path=param.path
     files=param.files
     thr=param.thr
