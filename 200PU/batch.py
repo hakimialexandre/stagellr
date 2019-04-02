@@ -106,7 +106,7 @@ def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name=
     print ('===============')
     
     for i,batch in enumerate(batches_elec):
-        with open(workdir+'/'+version+'/log.txt','w') as log:
+        with open(workdir+'/'+version+'/log.txt','a') as log:
             qsub_args = []
             #qsub_args.append('-{}'.format(queue))
 
@@ -121,7 +121,7 @@ def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name=
             print ('===============')
 
     for i,batch in enumerate(batches_pions):
-        with open(workdir+'/'+version+'/log.txt','w') as log:
+        with open(workdir+'/'+version+'/log.txt','a') as log:
             qsub_args = []
             #qsub_args.append('-{}'.format(queue))
 
