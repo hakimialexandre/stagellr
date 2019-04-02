@@ -120,7 +120,7 @@ def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name=
             print(str(datetime.now()), status.returncode, file=log)
             if status.returncode==0:
                 duration=time.time()-start
-                print(':elec_batch_{} done in {}\n'.format(i, duration),file=log)
+                print(':elec_batch_{} done in {}s\n'.format(i, duration),file=log)
             print ('===============')
 
     for i,batch in enumerate(batches_pions):
@@ -137,7 +137,7 @@ def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name=
             print(str(datetime.now()), status.returncode, file =log)
             if status.returncode==0:
                 duration=time.time()-start
-                print(':pion_batch_{} done in {}\n'.format(i, duration),file=log)
+                print(':pion_batch_{} done in {}s\n'.format(i, duration),file=log)
             print ('===============')
     
         
