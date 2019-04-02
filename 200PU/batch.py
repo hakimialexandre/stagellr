@@ -105,6 +105,8 @@ def prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions,thr, na
 def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name='batch', queue='long', proxy='~/.t3/proxy.cert'):
     print ('Sending {0}+{1} jobs on {2}'.format(len(batches_elec), len(batches_pions), queue+'@llrcms01'))
     print ('===============')
+    with open(workdir+'/'+version+'/log.txt','a') as log:
+        print('Number of electrons batches: {}\n Number of pions batches: {}\n ========== '.format(len(batches_elec), len(batches_pions)),file=log)
     
     for i,batch in enumerate(batches_elec):
         with open(workdir+'/'+version+'/log.txt','a') as log:
