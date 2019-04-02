@@ -118,7 +118,7 @@ def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name=
             if status.returncode==0:
                 print(':elec_batch_{} done\n'.format(i),file=log)
 
-            for i,batch in enumerate(batches_pions):
+        for i,batch in enumerate(batches_pions):
             qsub_args = []
             #qsub_args.append('-{}'.format(queue))
 
