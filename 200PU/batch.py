@@ -167,7 +167,8 @@ def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name=
             print ('===============')
         if stop==True:
             print('Test ended')
-            print('Test ended', file=log)
+            with open(workdir+'/'+version+'/log.txt','a') as log:
+                print('Test ended', file=log)
             break
     
         
