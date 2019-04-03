@@ -5,4 +5,4 @@ path_pions="/data_CMS/cms/sauvan/HGCAL/Ntuples/ForAlexandre/SinglePion_FlatPt-2t
 file_per_batch_elec=5
 file_per_batch_pion=10
 stop=True
-local=True
+local=False
