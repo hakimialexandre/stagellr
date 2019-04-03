@@ -122,10 +122,11 @@ def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name=
                 qsub_args.append('-{}'.format(queue))
 
             qsub_args.append(elec_dir+'/'+name+'_{}.sub'.format(i))
-            qsub_command=[]
+            qsub_command = []
             if local==False:
-                qsub_command = ['/opt/exp_soft/cms/t3/t3submit'] + qsub_args
+                qsub_command = ['/opt/exp_soft/cms/t3/t3submit']
             qsub_command.append(qsub_args)
+            print('qsub_command=', qsub_command)
             print (str(datetime.now()),' '.join(qsub_command))
             print(str(datetime.now()),':elec_batch_{} start'.format(i),file=log)
             start=time.time()
