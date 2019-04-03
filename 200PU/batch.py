@@ -122,14 +122,14 @@ def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name=
                 qsub_args.append('-{}'.format(queue))
 
             qsub_args.append(elec_dir+'/'+name+'_{}.sub'.format(i))
-
+            qsub_command=[]
             if local==False:
                 qsub_command = ['/opt/exp_soft/cms/t3/t3submit'] + qsub_args
-
-            print (str(datetime.now()),' '.join(qsub_args))
+            qsub_command.append(qsub_args)
+            print (str(datetime.now()),' '.join(qsub_command))
             print(str(datetime.now()),':elec_batch_{} start'.format(i),file=log)
             start=time.time()
-            status=subprocess.run(qsub_args, capture_output=False)
+            status=subprocess.run(qsub_command, capture_output=False)
            
             if status.returncode==0:
                 duration=time.time()-start
@@ -168,8 +168,9 @@ def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name=
     
     
     
-def main(parameters):
-    import parameters
+def main(parameters_file):
+    import importlib
+    parameters=importlib.import_module(parameters_file)
     thr= parameters.threshold
     path_electrons=parameters.path_elec
     path_pions=parameters.path_pions
