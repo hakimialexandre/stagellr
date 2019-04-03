@@ -141,7 +141,6 @@ def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name=
             print ('===============')
         if stop==True:
             
-            
             break
 
     for i,batch in enumerate(batches_pions):
@@ -155,10 +154,10 @@ def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name=
                 qsub_command = ['/opt/exp_soft/cms/t3/t3submit']+ qsub_args
             if local==True:
                 qsub_command = qsub_args
-            print (str(datetime.now()),' '.join(qsub_args))
+            print (str(datetime.now()),' '.join(qsub_command))
             print(str(datetime.now()),':pion_batch_{} start'.format(i),file=log)
             start=time.time()
-            status=subprocess.run(qsub_args, capture_output=False)
+            status=subprocess.run(qsub_command, capture_output=False)
             
             if status.returncode==0:
                 duration=time.time()-start
