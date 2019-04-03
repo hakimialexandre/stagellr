@@ -89,8 +89,9 @@ def prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions,thr, na
         with open(name+'_{}.sub'.format(i), 'w') as script:
             print ('#! /bin/bash', file=script)
             print ('uname -a',file=script)
-            #print >>script, 'cd', workdir
-            #print >>script, 'source init_env_polui.sh'
+            print ( 'cd', workdir, file=script)
+            if local == False:
+                print('source init_env_polui.sh', file=script)
             print ('cd', workdir+'/'+version,file=script)
             print ( 'python -W ignore '+workdir+'/preprocessing.py -f '+pions_dir+'/pions_{}'.format(i),file=script)
             #print >>script, 'touch', name+'_{}.done'.format(i)
@@ -102,45 +103,64 @@ def prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions,thr, na
     return elec_dir, pions_dir, version
     
 
-def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name='batch', queue='long', proxy='~/.t3/proxy.cert'):
-    print ('Sending {0}+{1} jobs on {2}'.format(len(batches_elec), len(batches_pions), queue+'@llrcms01'))
+def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name='batch', queue='long', proxy='~/.t3/proxy.cert',stop=False, local=True):
+    if local == True:
+        machine=llruicms01
+    else:
+        machine=llrt3
+
+    print ('Sending {0}+{1} jobs on {2}'.format(len(batches_elec), len(batches_pions), queue+'@{}'.format(machine)))
     print ('===============')
     with open(workdir+'/'+version+'/log.txt','a') as log:
-        print('Number of electrons batches: {}\n Number of pions batches: {}\n ========== '.format(len(batches_elec), len(batches_pions)),file=log)
+        print('Number of electrons batches: {}\nNumber of pions batches: {}\n ========== '.format(len(batches_elec), len(batches_pions)),file=log)
     
     for i,batch in enumerate(batches_elec):
         with open(workdir+'/'+version+'/log.txt','a') as log:
             qsub_args = []
-            #qsub_args.append('-{}'.format(queue))
+            if local==False:
+                qsub_args.append('-{}'.format(queue))
 
             qsub_args.append(elec_dir+'/'+name+'_{}.sub'.format(i))
-            #qsub_command = ['/opt/exp_soft/cms/t3/t3submit'] + qsub_args
+
+            if local==False:
+                qsub_command = ['/opt/exp_soft/cms/t3/t3submit'] + qsub_args
+
             print (str(datetime.now()),' '.join(qsub_args))
-            print(str(datetime.now()),':elec_batch_{} start\n'.format(i),file=log)
+            print(str(datetime.now()),':elec_batch_{} start'.format(i),file=log)
             start=time.time()
             status=subprocess.run(qsub_args, capture_output=False)
-            print(str(datetime.now()), status.returncode, file=log)
+           
             if status.returncode==0:
                 duration=time.time()-start
-                print(':elec_batch_{} done in {}s\n'.format(i, duration),file=log)
+                print(str(datetime.now()),':elec_batch_{} done in {}s'.format(i, duration),file=log)
+            else:
+                print(':elec_batch_{}: failed'.format(i),file=log)
             print ('===============')
+        if stop==True:
+            break
 
     for i,batch in enumerate(batches_pions):
         with open(workdir+'/'+version+'/log.txt','a') as log:
             qsub_args = []
-            #qsub_args.append('-{}'.format(queue))
+            if local == False:
+                qsub_args.append('-{}'.format(queue))
 
             qsub_args.append(pions_dir+'/'+name+'_{}.sub'.format(i))
-            #qsub_command = ['/opt/exp_soft/cms/t3/t3submit'] + qsub_args
+            if local ==False:
+                qsub_command = ['/opt/exp_soft/cms/t3/t3submit'] + qsub_args
             print (str(datetime.now()),' '.join(qsub_args))
-            print(str(datetime.now()),':pion_batch_{} start\n'.format(i),file=log)
+            print(str(datetime.now()),':pion_batch_{} start'.format(i),file=log)
             start=time.time()
             status=subprocess.run(qsub_args, capture_output=False)
-            print(str(datetime.now()), status.returncode, file =log)
+            
             if status.returncode==0:
                 duration=time.time()-start
-                print(':pion_batch_{} done in {}s\n'.format(i, duration),file=log)
+                print(str(datetime.now()),':pion_batch_{} done in {}s'.format(i, duration),file=log)
+            else:
+                print(':pion_batch_{}: failed'.format(i),file=log)
             print ('===============')
+        if stop==True:
+            break
     
         
     
@@ -152,18 +172,26 @@ def main(parameters):
     thr= parameters.threshold
     path_electrons=parameters.path_elec
     path_pions=parameters.path_pions
-    file_per_batch=parameters.file_per_batch
+    file_per_batch_elec=parameters.file_per_batch_elec
+    file_per_batch_pion=parameters.file_per_batch_pion
+    stop=parameters.stop
+    local=parameters.local
     
-    batches_elec=batch_files(path_electrons, file_per_batch)
-    batches_pions=batch_files(path_pions, file_per_batch)
+    batches_elec=batch_files(path_electrons, file_per_batch_elec)
+    batches_pions=batch_files(path_pions, file_per_batch_pion)
       
-    elec_dir, pions_dir, version=prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions, thr)
+    elec_dir, pions_dir, version=prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions, thr,local)
     os.chdir(workdir)
-    launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions, version)
+    launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions, version, stop, local)
    
     
 if __name__=='__main__':
-    parameters='parameters'
+
+    parser = optparse.OptionParser()
+    parser.add_option("-p","--param",type="string", dest="param_file", help="select the parameter file")
+    (opt, args) = parser.parse_args()
+
+    parameters=opt.param_file
     main(parameters)
     
 
