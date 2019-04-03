@@ -11,6 +11,7 @@ from datetime import date
 from datetime import datetime
 import subprocess
 import time
+import optparse
 
 workdir=os.getcwd()
 
@@ -26,7 +27,7 @@ def job_version(workdir):
     return version_date
 
 def batch_files(path, file_per_batch):
-    n_files=len(os.listdir(path))
+    #n_files=len(os.listdir(path))
     batches={}
     j=0
     batches[j]=[]
@@ -105,9 +106,9 @@ def prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions,thr, na
 
 def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name='batch', queue='long', proxy='~/.t3/proxy.cert',stop=False, local=True):
     if local == True:
-        machine=llruicms01
+        machine='llruicms01'
     else:
-        machine=llrt3
+        machine='llrt3'
 
     print ('Sending {0}+{1} jobs on {2}'.format(len(batches_elec), len(batches_pions), queue+'@{}'.format(machine)))
     print ('===============')
