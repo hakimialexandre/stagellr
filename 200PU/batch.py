@@ -140,6 +140,7 @@ def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name=
                 print(':elec_batch_{}: failed'.format(i),file=log)
             print ('===============')
         if stop==True:
+            
             break
 
     for i,batch in enumerate(batches_pions):
@@ -163,6 +164,8 @@ def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name=
                 print(':pion_batch_{}: failed'.format(i),file=log)
             print ('===============')
         if stop==True:
+            print('Test ended')
+            print('Test ended', file=log)
             break
     
         
