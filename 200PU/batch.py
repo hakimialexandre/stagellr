@@ -41,7 +41,7 @@ def batch_files(path, file_per_batch):
         
 
         
-def prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions,thr, name='batch'):
+def prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions,thr, name='batch', local=True):
     version=job_version(workdir)
     os.chdir(workdir)
     os.makedirs(version)
@@ -181,7 +181,7 @@ def main(parameters):
     batches_elec=batch_files(path_electrons, file_per_batch_elec)
     batches_pions=batch_files(path_pions, file_per_batch_pion)
       
-    elec_dir, pions_dir, version=prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions, thr,local)
+    elec_dir, pions_dir, version=prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions, thr,local=local)
     os.chdir(workdir)
     launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions, version, stop, local)
    
