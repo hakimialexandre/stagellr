@@ -183,7 +183,7 @@ def main(parameters):
       
     elec_dir, pions_dir, version=prepare_jobs(path_electrons, path_pions, batches_elec, batches_pions, thr,local=local)
     os.chdir(workdir)
-    launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions, version, stop, local)
+    launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions, version, stop=stop, local=local)
    
     
 if __name__=='__main__':
