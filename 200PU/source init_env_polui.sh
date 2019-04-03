@@ -1,2 +1,3 @@
 #! /usr/bin/env bash
-export python_path=/opt/exp_soft/llr/python/3.7.0
+module use /opt/exp_soft/vo.llr.in2p3.fr/modulefiles
+module load python/3.7.0
