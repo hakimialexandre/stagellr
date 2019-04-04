@@ -150,12 +150,14 @@ def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name=
                 qsub_args.append('-{}'.format(queue))
 
             qsub_args.append(pions_dir+'/'+name+'_{}.sub'.format(i))
-            if local ==False:
-                qsub_command = ['/opt/exp_soft/cms/t3/t3submit'] + qsub_args
-            print (str(datetime.now()),' '.join(qsub_args))
+            if local==False:
+                qsub_command = ['/opt/exp_soft/cms/t3/t3submit']+ qsub_args
+            if local==True:
+                qsub_command = qsub_args
+            print (str(datetime.now()),' '.join(qsub_command))
             print(str(datetime.now()),':pion_batch_{} start'.format(i),file=log)
             start=time.time()
-            status=subprocess.run(qsub_args, capture_output=False)
+            status=subprocess.run(qsub_command, capture_output=False)
             
             if status.returncode==0:
                 duration=time.time()-start
@@ -165,7 +167,8 @@ def launch_jobs(elec_dir, pions_dir, batches_elec, batches_pions,version,  name=
             print ('===============')
         if stop==True:
             print('Test ended')
-            print('Test ended', file=log)
+            with open(workdir+'/'+version+'/log.txt','a') as log:
+                print('Test ended', file=log)
             break
     
         
