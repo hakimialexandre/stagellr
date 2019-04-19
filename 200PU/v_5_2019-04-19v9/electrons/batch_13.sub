@@ -1,4 +1,0 @@
-#! /bin/bash
-uname -a
-cd /grid_mnt/vol__vol_U__u/llr/cms/hakimi/stage_llr/stagellr/200PU/v_5_2019-04-19v9
-python -W ignore /grid_mnt/vol__vol_U__u/llr/cms/hakimi/stage_llr/stagellr/200PU/preprocessingv9.py -f /grid_mnt/vol__vol_U__u/llr/cms/hakimi/stage_llr/stagellr/200PU/v_5_2019-04-19v9/electrons/elec_13
